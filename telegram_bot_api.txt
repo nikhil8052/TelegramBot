@@ -1,0 +1,86 @@
+
+13.11 Version 
+SEE ALL THE PORT AND PROCESS ID 
+netstat -ano -p tcp
+---------------How to use the API functions and defination of the API functions---------
+
+Update : 
+update is used to continue update from the bot.
+
+
+Dispatcher:
+dispatcher is used to associate the handler with the commands .
+
+
+TO SEND MESSAGE USING THE UPDATE 
+update.message.reply_text(f'Hello {update.effective_user.first_name}')
+
+
+commandHandler = This handler is used to to handle the commands .
+
+-----------------------------------------------------------------------------------
+
+callback_query_handler = we can call the function from it,  it take the one argument callable funtion 
+the callable function receives the two more argument when it is called by the callback_query_handler
+first is callable(update,context)
+
+in the update we can get the all details about the callback_query 
+
+update.callback_query 
+update.callback_query.message    (To get the message instance )
+update.callback_query.message.chat.id  ( To get the chat id from the callback_query )
+
+
+
+---------------------------------------------------------------------------------------
+
+To send the Quiz Question we have the functions 
+
+bot.send_poll(update.callback_query.message.chat.id,question=q,options=o,type=Poll.QUIZ,correct_option_id=0,open_period=15)
+# dispatcher.add_handler(PollAnswerHandler(poll_handler))
+
+
+--------------------------------------------------------------------------
+FILES OPERATIONS 
+f = open("data/names.txt", "w+") # Read + Write
+f = open("data/names.txt", "a+") # Read + Append
+f = open("data/names.txt", "r+") # Read + Write
+
+-----------------------------------------------------------------------
+
+SEND BUTTON USING URL 
+
+k={"chat_id":"5361834379",
+       "text":"select any option",
+       "reply_markup":{"keyboard":
+            [[{"text":"nikhil"}],
+             [{"text":"Nikhil"}]],
+             "resize_keyboard":True,
+             "one_time_keyboard":True
+       }}
+
+k=json.dumps(k)
+print(k)
+
+
+----------------------------------------------------------------
+    ON server production 
+
+if __name__ == '__main__':
+    from waitress import serve
+    serve(app,host='0.0.0.0',port=8080)
+
+
+
+
+--------------------------------------------------------------------
+
+async def button(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Parses the CallbackQuery and updates the message text."""
+    query = update.callback_query
+
+    # CallbackQueries need to be answered, even if no notification to the user is needed
+    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
+    await query.answer()
+
+    await query.edit_message_text(text=f"Selected option: {query.data}")
